@@ -4,10 +4,17 @@ from rest_framework.routers import DefaultRouter
 from .views import (DoctorRegistrationView,
                     FacebookLogin,GitHubLogin, PatientRegistrationView, TwitterLogin, CustomLoginView,)
 
+
+from dj_rest_auth.views import (
+    PasswordResetConfirmView,
+    PasswordResetView,
+)
+
 urlpatterns = [
-    path("api/facebook/", FacebookLogin.as_view(), name="fb_login"),
-    path("api/twitter/", TwitterLogin.as_view(), name="twitter_login"),
-    path("api/github/", GitHubLogin.as_view(), name="github_login"),
+    # other URL patterns here...
+    path('api/auth/', include('dj_rest_auth.urls')),
+    path('api/auth/password/reset/confirm/<slug:uidb64>/<slug:token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('api/auth/password/reset/', PasswordResetView.as_view(), name='password_reset'),
 ]
 
 

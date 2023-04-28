@@ -13,7 +13,7 @@ class Post(models.Model):
     owner = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-    likes = models.ManyToManyField(User,related_name='likes')
+    likes = models.ManyToManyField(User,related_name='likes', blank=True)
     def __str__(self):
         return self.title
     
