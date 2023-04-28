@@ -51,7 +51,7 @@ class DoctorCustomRegistrationSerializer(RegisterSerializer):
         phone = data.get("phone")
 
         user = super().save(request)
-        user.is_doctor = True
+        # user.is_doctor = True
         user.phone = phone
         user.save()
         
