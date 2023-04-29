@@ -4,12 +4,14 @@ from .serializers import PostSerializer, CommentSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
+from rest_framework.permissions import IsAuthenticated
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     filter_backends = [SearchFilter]
     search_fields = ['allergy__arabicName', 'allergy__englishName']
+    permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=['POST'])
     def like(self, request, pk=None, *args, **kwargs):
