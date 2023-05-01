@@ -63,7 +63,6 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsDoctor]
-    # permission_classes = [permissions.IsAuthenticated, IsDoctorOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

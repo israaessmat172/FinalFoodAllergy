@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.conf import settings
 
 def default_profile_pic():
     return "default_profile_pic.jpg"
@@ -26,6 +27,9 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
+    def default_image_url(self):
+        return settings.MEDIA_URL + default_profile_pic()
+    
     def save(self, *args, **kwargs):
         # Set the profile pic to the default image if it is not already set
         if not self.profile_pic:

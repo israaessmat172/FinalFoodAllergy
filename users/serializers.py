@@ -20,7 +20,7 @@ class DetailedTokenSerializer(TokenSerializer):
     name = serializers.CharField(source="user.username")
     email = serializers.CharField(source="user.email")
     phone = serializers.CharField(source="user.phone")
-    image = serializers.ImageField(source="user.profile_pic")
+    image = serializers.SerializerMethodField()
     is_doctor = serializers.BooleanField(source="user.is_doctor")
     
     token = serializers.CharField(source="key")
@@ -33,6 +33,12 @@ class DetailedTokenSerializer(TokenSerializer):
 
     def get_message(self, obj):
         return "تم تسجيل الدخول بنجاح" if obj else "خطأ في البريد الالكتروني او كلمة المرور"
+    
+    def get_image(self, obj):
+        if obj.user.profile_pic:
+            return obj.user.profile_pic.url
+        else:
+            return obj.user.default_image_url()
 
 class DoctorCustomRegistrationSerializer(RegisterSerializer):
     phone = serializers.CharField(required=True)
