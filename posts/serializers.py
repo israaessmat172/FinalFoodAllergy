@@ -18,21 +18,10 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = '__all__'
 
-# class LikeSerializer(serializers.ModelSerializer):
-#     # user = serializers.ReadOnlyField(source='user.username')
-
-#     # def create(self, validated_data):
-#     #     validated_data['user_type'] = ContentType.objects.get_for_model(self.context['request'].user).pk
-#     #     validated_data['user_id'] = self.context['request'].user.pk
-#     #     return super().create(validated_data)
-
-    # class Meta:
-    #     model = Like
-    #     fields = '__all__'
 
 class PostSerializer(serializers.ModelSerializer):
     owner_name = serializers.CharField(source='owner.username', read_only=True)
-    comments = CommentSerializer(many=True, read_only=True)
+    comments = CommentSerializer(many=True, read_only=True, source='comment_set')
     
     class Meta:
         model = Post

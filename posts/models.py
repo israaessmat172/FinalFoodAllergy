@@ -9,7 +9,7 @@ from django.urls import reverse
 
 class Post(models.Model):
     title = models.CharField(max_length=500)
-    # image = models.ImageField( null=True, blank=True)
+    image = models.ImageField( null=True, blank=True)
     allergy = models.ForeignKey(Allergy, related_name='posts', on_delete=models.PROTECT)
     owner = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -5,14 +5,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsDoctor
+from .permissions import IsDoctor, IsOwnerOrReadOnly
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     filter_backends = [SearchFilter]
     search_fields = ['allergy__arabicName', 'allergy__englishName']
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
     @action(detail=True, methods=['POST'])
     def like(self, request, pk=None, *args, **kwargs):
@@ -27,6 +27,8 @@ class PostViewSet(viewsets.ModelViewSet):
             liked = True
 
         return Response({'liked': liked})
+    
+    
     
 class PublicPostViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Post.objects.all()
@@ -48,11 +50,13 @@ class PublicPostViewSet(viewsets.ReadOnlyModelViewSet):
 
         return Response({'liked': liked})
 
+class UserPostsViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = PostSerializer
+    permission_classes = (IsAuthenticated,)
 
-# class LikeViewSet(viewsets.ModelViewSet):
-#     queryset = Like.objects.all()
-#     serializer_class = LikeSerializer
-#     # permission_classes = [permissions.IsAuthenticated, IsDoctorOrPatientOrReadOnly]
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        return Post.objects.filter(owner__id=user_id)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -63,3 +67,10 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+class PostCommentsViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        post_id = self.kwargs['post_id']
+        return Comment.objects.filter(post__id=post_id)
