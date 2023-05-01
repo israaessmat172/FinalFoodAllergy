@@ -4,6 +4,9 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+def default_profile_pic():
+    return "default_profile_pic.jpg"
+
 class User(AbstractUser):
     email = models.EmailField(_("email address"), unique=True)
     
@@ -14,6 +17,7 @@ class User(AbstractUser):
         blank=True,
         null=True,
         upload_to="profile_pics",
+        default=default_profile_pic,
     )
     phone = models.CharField(
         max_length=20,
@@ -21,6 +25,12 @@ class User(AbstractUser):
     )
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
+
+    def save(self, *args, **kwargs):
+        # Set the profile pic to the default image if it is not already set
+        if not self.profile_pic:
+            self.profile_pic = default_profile_pic()
+        super().save(*args, **kwargs)
 
 class Doctor(models.Model):
     doctor = models.OneToOneField(
