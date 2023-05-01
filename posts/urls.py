@@ -6,7 +6,7 @@ router = routers.DefaultRouter()
 router.register('posts', PublicPostViewSet, basename='Posts')
 router.register('addposts', PostViewSet, basename='Posts')
 router.register('comments', CommentViewSet, basename='Comments')
-router.register('user-posts/(?P<user_id>[^/.]+)/', UserPostsViewSet, basename='user-posts')
+router.register('user-posts/(?P<user_id>[^/.]+)', UserPostsViewSet, basename='user-posts')
 router.register('posts/(?P<post_id>\d+)/comments', PostCommentsViewSet, basename='post-comments')
 
 urlpatterns = [

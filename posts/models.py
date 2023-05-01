@@ -9,7 +9,7 @@ from django.urls import reverse
 
 class Post(models.Model):
     title = models.CharField(max_length=500)
-    image = models.ImageField( null=True, blank=True, upload_to="photos")
+    image = models.ImageField( null=True, blank=True)
     allergy = models.ForeignKey(Allergy, related_name='posts', on_delete=models.PROTECT)
     owner = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -25,7 +25,7 @@ class Comment(models.Model):
     post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
-    image = models.ImageField(null=True, blank=True, upload_to="photos")
+    image = models.ImageField(null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
