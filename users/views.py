@@ -5,11 +5,14 @@ from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from dj_rest_auth.registration.views import RegisterView, SocialLoginView
 from dj_rest_auth.social_serializers import TwitterLoginSerializer
 from rest_framework import  viewsets
+from rest_framework.response import Response
 from .serializers import (
     CustomPatientRegistrationSerializer,
     DoctorCustomRegistrationSerializer,
     DetailedTokenSerializer,
+    UserProfileSerializer,
 )
+from .models import User
 # Create your views here.
 
     # Create your views here.
@@ -28,6 +31,22 @@ class DoctorRegistrationView(RegisterView, viewsets.GenericViewSet):
 class PatientRegistrationView(RegisterView, viewsets.GenericViewSet):
     serializer_class = CustomPatientRegistrationSerializer
 
+class UserProfileViewSet(viewsets.ViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+
+    def retrieve(self, request, pk=None):
+        serializer = self.serializer_class(request.user)
+        return Response(serializer.data)
+
+    def update(self, request, pk=None):
+        user = request.user
+        serializer = self.serializer_class(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=400)
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
