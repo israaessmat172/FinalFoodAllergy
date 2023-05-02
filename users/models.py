@@ -6,7 +6,6 @@ from django.dispatch import receiver
 from django.conf import settings
 
 """
-فين media file ?
 """
 
 def default_profile_pic():
