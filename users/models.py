@@ -5,8 +5,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
 
+"""
+فين media file ?
+"""
+
 def default_profile_pic():
-    return "default_profile_pic.jpg"
+    return "profile_pics/default.jpg"
 
 class User(AbstractUser):
     email = models.EmailField(_("email address"), unique=True)
