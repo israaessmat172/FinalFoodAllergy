@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from users.models import User, Doctor, Patient
 from database.models import Allergy
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
 from django.urls import reverse
 
 class Post(models.Model):

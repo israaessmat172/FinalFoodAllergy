@@ -46,7 +46,18 @@ class FoodAllergy(models.Model):
 
     def __str__(self):
         return f"{self.arabicName} - {self.englishName}"
+
+class MiniFoodAllergy(models.Model):
+    mini_allergy_pic = models.ImageField(
+        blank=True,
+        null=True,
+        upload_to="miniAllergy_pics",
+    )
+    arabicName = models.CharField(max_length=500, verbose_name=_("Arabic name"))
+    englishName = models.CharField(max_length=500, verbose_name=_("English name"))
     
+    def __str__(self):
+        return f"{self.arabicName} - {self.englishName}"
 
 # class Food(models.Model):
 #     foodName = models.CharField(max_length=500)

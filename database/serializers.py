@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Allergy, Category, Food, FoodAllergy
+from .models import Allergy, Category, Food, FoodAllergy, MiniFoodAllergy
 
 class FoodSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,3 +54,16 @@ class FoodAllergySerializer(serializers.ModelSerializer):
         }
         return dataoffoodallegry
 
+class MiniFoodAllergySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MiniFoodAllergy
+        fields = "__all__"
+
+    def get_foodallergy(self, obj):
+        minifoodallegry = obj.minifoodallegry
+        dataofminifoodallegry = {
+            "mini_allergy_pic": minifoodallegry.mini_allergy_pic,
+            "arabicName": minifoodallegry.arabicName,
+            "englishName": minifoodallegry.englishName,
+        }
+        return dataofminifoodallegry

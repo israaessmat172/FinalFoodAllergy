@@ -43,5 +43,18 @@ class FoodAllergyAdmin(admin.ModelAdmin):
     ]
 
 admin.site.register(models.FoodAllergy, FoodAllergyAdmin)
+
+class MiniFoodAllergyAdmin(admin.ModelAdmin):
+    search_fields = [
+        "arabicName",
+        "englishName",
+    ]
+
+    filterset_fields = [
+        "arabicName",
+        "englishName",
+    ]
+admin.site.register(models.MiniFoodAllergy, MiniFoodAllergyAdmin)
+
 admin.site.register(Allergy)
 admin.site.register(Food)
