@@ -5,7 +5,6 @@ from database.models import Allergy
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.urls import reverse
-# from django.core.exceptions import ValidationError
 
 class Post(models.Model):
     title = models.CharField(max_length=500)
