@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     "database",
     "posts",
     "users",
-    "model_ai"
+    "model_ai",
+    "cart",
 ]
 
 MIDDLEWARE = [

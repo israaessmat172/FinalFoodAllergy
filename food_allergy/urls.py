@@ -29,6 +29,8 @@ urlpatterns = [
     path("api/", include("database.urls")),
     path("api/", include("users.urls")),
     path("api/", include("posts.urls")),
+    # path("api/", include("model_ai.urls")),
+    path("api/", include("cart.urls")),
 
     path("api/", include("dj_rest_auth.urls")),
     path("api/registration/", include("dj_rest_auth.registration.urls")),

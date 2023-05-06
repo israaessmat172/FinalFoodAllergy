@@ -1,8 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-
-
 # Create your models here.
 class Food(models.Model):
     arabicName = models.CharField(max_length=500, verbose_name=_("Arabic name"))
@@ -18,6 +16,7 @@ class Allergy(models.Model):
     
     def __str__(self):
         return f"{self.arabicName} - {self.englishName}"
+    
     
 
 class Category(models.Model):
