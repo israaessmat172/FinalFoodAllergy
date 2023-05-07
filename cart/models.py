@@ -15,6 +15,7 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.arabicName} - {self.englishName}"
     
+
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     total_price = models.FloatField(default=0)

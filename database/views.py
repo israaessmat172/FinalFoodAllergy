@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from .models import Allergy, Category, Food, FoodAllergy, MiniFoodAllergy
 from .permissions import FoodAllergyPermission, CategoryPermission, AllergyPermission, FoodPermission, MiniFoodAllergyPermission
@@ -11,6 +13,7 @@ from .serializers import (
     FoodSerializer, 
     MiniFoodAllergySerializer
 )
+from cart.serializers import ProductSerializer
 # Create your views here.
 
 class FoodViewSet(viewsets.ModelViewSet):
@@ -22,7 +25,14 @@ class FoodViewSet(viewsets.ModelViewSet):
 class AllergyViewSet(viewsets.ModelViewSet):
     queryset = Allergy.objects.all()
     serializer_class = AllergySerializer
-    permission_classes = [AllergyPermission]
+    # permission_classes = [AllergyPermission]
+
+    @action(detail=True, methods=['GET'])
+    def products(self, request, pk=None):
+        allergy = self.get_object()
+        products = allergy.products.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

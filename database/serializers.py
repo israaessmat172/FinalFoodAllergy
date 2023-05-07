@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Allergy, Category, Food, FoodAllergy, MiniFoodAllergy
-
+from cart.serializers import ProductSerializer
 class FoodSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food
@@ -8,9 +8,11 @@ class FoodSerializer(serializers.ModelSerializer):
 
 
 class AllergySerializer(serializers.ModelSerializer):
+    products = ProductSerializer(many=True, read_only=True)
     class Meta:
         model = Allergy
         fields = "__all__"
+        
 
 class CategorySerializer(serializers.ModelSerializer):
     food = serializers.SerializerMethodField()

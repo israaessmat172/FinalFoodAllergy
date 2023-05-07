@@ -2,10 +2,17 @@ from rest_framework import serializers
 from .models import Product, CartItem,Cart, Rating
 from django.db import models
 from django.db.models import Avg
+from database.models import Allergy
+
+class AllergySerializer_(serializers.ModelSerializer):
+    class Meta:
+        model = Allergy
+        fields = "__all__"
 
 
 class ProductSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
+    allergies = AllergySerializer_(many=True, read_only=True)
     class Meta:
         model = Product
         fields = "__all__"
@@ -23,6 +30,7 @@ class ProductSerializer(serializers.ModelSerializer):
         return dataofproducts
     def get_rating(self, obj):
         return obj.ratings.aggregate(models.Avg('rating'))['rating__avg']
+
 
 
 class CartItemSerializer(serializers.ModelSerializer):
