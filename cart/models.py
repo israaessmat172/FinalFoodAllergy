@@ -15,15 +15,18 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.arabicName} - {self.englishName}"
     
-
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     total_price = models.FloatField(default=0)
     
     def save(self,*args, **kwargs):
-        self.get_price
+        try:
+            self.get_price
+        except:
+            pass
         return super().save(*args, **kwargs)
     
+
     @property
     def get_price(self):
         price = sum(item.price for item in self.items.all())
@@ -32,7 +35,7 @@ class Cart(models.Model):
             self.save(update_fields=["total_price"])
         return self.total_price
     
-    def __str__(self) -> str:
+    def _str_(self) -> str:
         return self.user.email
     
     
@@ -40,20 +43,24 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
-    price = models.FloatField(default=0)
+    price = models.FloatField(default=0.0)
     
     def save(self,*args, **kwargs):
         self.get_price
         return super().save(*args, **kwargs)
+
     
     @property
     def get_price(self):
-        price = self.product.price * self.quantity
+        price = int(self.product.price) * int(self.quantity)
         if price != self.price:
             self.price = price
-            self.save(update_fields=["price"])
+            try:
+                self.save(update_fields=["price"])
+            except:
+                pass
         return self.price
-    def __str__(self) -> str:
+    def _str_(self) -> str:
         return self.cart.user.email
 
 class Rating(models.Model):
