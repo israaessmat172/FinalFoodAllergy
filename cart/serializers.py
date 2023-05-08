@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, CartItem,Cart, Rating
+from .models import Product, CartItem,Cart, Rating,OrderItem, Order
 from django.db import models
 from django.db.models import Avg
 from database.models import Allergy
@@ -49,3 +49,15 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = "__all__"
+
+class OrderItemSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = '__all__'
+
+class OrderSerializers(serializers.ModelSerializer):
+    item = OrderItemSerializers(read_only=True, many=True)
+    class Meta:
+        model = Order
+        fields = ['address','phone','item','total_price']
+        extra_kwargs={"total_price":{"read_only":True}}

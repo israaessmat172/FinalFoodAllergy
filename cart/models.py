@@ -68,3 +68,16 @@ class Rating(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='ratings')
     rating = models.IntegerField(choices=((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')))
 
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    address = models.CharField(max_length=200,null=True)
+    phone = models.CharField(max_length=20,null=True)
+    total_price = models.FloatField(default=0)
+
+class OrderItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    price = models.FloatField(default=0.0)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='item')
+
+

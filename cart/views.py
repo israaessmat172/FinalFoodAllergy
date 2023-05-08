@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import *
-from .serializers import *
+from .models import Product, Rating, Cart, CartItem, Order, OrderItem
+from .serializers import ProductSerializer, CartSerializers, CartItemSerializer, OrderSerializers
 from django_filters.rest_framework import DjangoFilterBackend
 import random
 class ProductViewSet(viewsets.ModelViewSet):
@@ -63,3 +63,40 @@ class CartViewSet(viewsets.ModelViewSet):
             cart.save(update_fields=['quantity'])
         serializer = self.serializer_class(cart)
         return Response(serializer.data)
+    
+    @action(detail=False, methods=['POST'], serializer_class= OrderSerializers)
+    def complete(self,request):
+        user=request.user
+        data = request.data.copy()
+        serializers = OrderSerializers(data=data)
+        if not serializers.is_valid():
+            return Response(serializers.errors)
+        cart = Cart.objects.get(user=user)
+        cartItem= CartItem.objects.filter(cart=cart)
+        order = Order.objects.create(
+                user=request.user,
+                total_price=cart.total_price,
+                **data
+                )
+        for cartItem_ in cartItem:
+            OrderItem.objects.create(
+                product=cartItem_.product,
+                quantity = cartItem_.quantity,
+                price = cartItem_.price,
+                order = order
+                )
+        serializers = OrderSerializers(order)
+        return Response(serializers.data)
+ 
+
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderSerializers
+    permission_classes = [permissions.IsAuthenticated]
+    http_method_names=['get']
+    def list(self,request):
+        user = request.user
+        order_ = Order.objects.filter(user=user).all()
+        serializer = self.serializer_class(order_, many=True)
+        return Response(serializer.data)
+        
