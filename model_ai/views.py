@@ -19,8 +19,9 @@ import io
 
 class PredictAPIView(APIView):
     # permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
+    queryset = Category.objects.all()
     permission_classes = [IsAuthenticated]
-    queryset = Category.objects.all()  
+      
     serializer_class = PredictSerializer
 
     def post(self, request):
@@ -38,7 +39,7 @@ class PredictAPIView(APIView):
 
             # load the model and get the prediction
             print("Loading model...")
-            model = tf.keras.models.load_model('model_one/model.h5', custom_objects={'KerasLayer': hub.KerasLayer}, compile=False)
+            model = tf.keras.models.load_model('model_ai/model.h5', custom_objects={'KerasLayer': hub.KerasLayer}, compile=False)
             model.build((None, 224, 224, 3))
             print("Model loaded.")
             prediction = model.predict(np.array([img]))
