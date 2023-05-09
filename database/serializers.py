@@ -8,6 +8,12 @@ class FoodSerializer(serializers.ModelSerializer):
 
 
 class AllergySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Allergy
+        fields = "__all__"
+
+
+class AllergySerializer_(serializers.ModelSerializer):
     products = ProductSerializer(many=True, read_only=True)
     class Meta:
         model = Allergy

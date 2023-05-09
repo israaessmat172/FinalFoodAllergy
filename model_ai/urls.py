@@ -1,6 +1,6 @@
 # from django.urls import path
-# from .views import predict_food
+# from . import views
 
 # urlpatterns = [
-#     path('predict_food/', predict_food, name='predict_food'),
+#     path('predict/', views.PredictView.as_view(), name='predictc'),
 # ]

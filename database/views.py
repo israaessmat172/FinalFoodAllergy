@@ -11,7 +11,8 @@ from .serializers import (
     CategorySerializer,
     FoodAllergySerializer,
     FoodSerializer, 
-    MiniFoodAllergySerializer
+    MiniFoodAllergySerializer,
+    AllergySerializer_
 )
 from cart.serializers import ProductSerializer
 # Create your views here.
@@ -33,6 +34,11 @@ class AllergyViewSet(viewsets.ModelViewSet):
         products = allergy.products.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
+    
+    def retrieve(self,request, pk=None):
+        allergy = Allergy.objects.get(id=pk)
+        serializers = AllergySerializer_(allergy)
+        return Response(serializers.data)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

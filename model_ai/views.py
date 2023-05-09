@@ -1,3 +1,53 @@
+# from keras.models import load_model
+# # from django.http import JsonResponse
+# from keras.applications.imagenet_utils import preprocess_input
+# from keras.preprocessing import image
+# import numpy as np
+# # import os
+# # from rest_framework.decorators import api_view
+# # from rest_framework.response import Response
+# from .serializers import CategorySerializer
+# from database.models import Food, Category
+
+
+
+
+# from django.shortcuts import get_object_or_404
+# from rest_framework.permissions import IsAuthenticated
+# from rest_framework.response import Response
+# from rest_framework.views import APIView
+
+
+# class PredictView(APIView):
+#     # permission_classes = [IsAuthenticated]
+
+#     def get_queryset(self):
+#         queryset = Category.objects.all()
+#         return queryset
+
+#     def post(self, request):
+#         model = load_model('model_ai/model.h5')
+#         img_path = request.FILES['image']
+#         img = image.load_img(img_path, target_size=(224, 224))
+#         x = image.img_to_array(img)
+#         c = np.expand_dims(x, axis=0)
+#         x = preprocess_input(x)
+#         prediction = model.predict(x)
+#         food = Food.objects.filter(englishName=prediction)[0]
+#         category = get_object_or_404(self.get_queryset(), food=food)
+#         serializer = CategorySerializer(category)
+#         return Response(serializer.data)
+
+ 
+
+
+
+
+
+
+
+
+
 # from django.http import JsonResponse
 # from django.shortcuts import get_object_or_404
 # from django.views.decorators.csrf import csrf_exempt

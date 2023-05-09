@@ -1,7 +1,6 @@
 # from rest_framework import serializers
-# from .models import ImageClassification
+# from database.serializers import CategorySerializer
 
-# class ImageClassificationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ImageClassification
-#         fields = '__all__'
+# class PredictSerializer(serializers.Serializer):
+#     image = serializers.ImageField()
+#     category = CategorySerializer(read_only=True)

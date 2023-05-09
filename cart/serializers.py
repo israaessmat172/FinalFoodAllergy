@@ -15,7 +15,7 @@ class ProductSerializer(serializers.ModelSerializer):
     allergies = AllergySerializer_(many=True, read_only=True)
     class Meta:
         model = Product
-        fields = "__all__"
+        fields = "_all_"
 
     def get_products(self, obj):
         products = obj.products
@@ -31,8 +31,6 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_rating(self, obj):
         return obj.ratings.aggregate(models.Avg('rating'))['rating__avg']
 
-
-
 class CartItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
     class Meta:
@@ -40,6 +38,7 @@ class CartItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class CartSerializers(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(slug_field='username',read_only=True)
     items = CartItemSerializer(many=True)
     class Meta:
         model = Cart
@@ -59,5 +58,5 @@ class OrderSerializers(serializers.ModelSerializer):
     item = OrderItemSerializers(read_only=True, many=True)
     class Meta:
         model = Order
-        fields = ['name','address','phone','item','total_price']
+        fields = ['id','name','address','phone','item','total_price']
         extra_kwargs={"total_price":{"read_only":True}}

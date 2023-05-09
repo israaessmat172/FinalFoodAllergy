@@ -54,11 +54,10 @@ class CartItem(models.Model):
     def get_price(self):
         price = int(self.product.price) * int(self.quantity)
         if price != self.price:
-            self.price = price
-            try:
+            if not self.price == 0.0:
+                self.price = price                 
                 self.save(update_fields=["price"])
-            except:
-                pass
+            self.price = price
         return self.price
     def _str_(self) -> str:
         return self.cart.user.email

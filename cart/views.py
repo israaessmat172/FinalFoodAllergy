@@ -46,7 +46,7 @@ class CartViewSet(viewsets.ModelViewSet):
         cart_.save()
         serializer = CartSerializers(cart_)
         return Response(serializer.data)
-        
+
     def create(self, request):
         user = request.user
         product_id = request.data.get('product_id')
@@ -63,20 +63,24 @@ class CartViewSet(viewsets.ModelViewSet):
             cart.save(update_fields=['quantity'])
         serializer = self.serializer_class(cart)
         return Response(serializer.data)
-    
+
     @action(detail=False, methods=['POST'], serializer_class= OrderSerializers)
     def complete(self,request):
         user=request.user
-        data = request.data.copy()
+        data = request.POST
         serializers = OrderSerializers(data=data)
         if not serializers.is_valid():
             return Response(serializers.errors)
         cart = Cart.objects.get(user=user)
+        cart.save()
         cartItem= CartItem.objects.filter(cart=cart)
+        
         order = Order.objects.create(
                 user=request.user,
                 total_price=cart.total_price,
-                **data
+                name = data['name'],
+                address = data['address'],
+                phone=data['phone']
                 )
         for cartItem_ in cartItem:
             OrderItem.objects.create(
@@ -87,7 +91,6 @@ class CartViewSet(viewsets.ModelViewSet):
                 )
         serializers = OrderSerializers(order)
         return Response(serializers.data)
- 
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = OrderItem.objects.all()
