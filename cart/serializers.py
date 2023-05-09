@@ -15,7 +15,7 @@ class ProductSerializer(serializers.ModelSerializer):
     allergies = AllergySerializer_(many=True, read_only=True)
     class Meta:
         model = Product
-        fields = "_all_"
+        fields = "__all__"
 
     def get_products(self, obj):
         products = obj.products
