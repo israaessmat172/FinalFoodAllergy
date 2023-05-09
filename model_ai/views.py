@@ -1,88 +1,83 @@
-# from keras.models import load_model
-# # from django.http import JsonResponse
-# from keras.applications.imagenet_utils import preprocess_input
-# from keras.preprocessing import image
-# import numpy as np
-# # import os
-# # from rest_framework.decorators import api_view
-# # from rest_framework.response import Response
-# from .serializers import CategorySerializer
-# from database.models import Food, Category
+import pathlib
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import PredictSerializer
+from database.models import Food, Category
+import tensorflow as tf
+import numpy as np
+from .serializers import *
+from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2
+from tensorflow.keras.layers import Dense, Dropout, Flatten
+from tensorflow.keras import Model
+import tensorflow_hub as hub
+from django.conf import settings
+from rest_framework import status
+from tensorflow.keras.preprocessing import image
+from rest_framework.permissions import IsAuthenticated
+import io
+# from rest_framework import permissions
 
+class PredictAPIView(APIView):
+    # permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
+    permission_classes = [IsAuthenticated]
+    queryset = Category.objects.all()  
+    serializer_class = PredictSerializer
 
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            img = serializer.validated_data['image']
+            img = img.read()  # extract the binary data from the InMemoryUploadedFile
+            print("Image read from InMemoryUploadedFile.")
+            img = tf.image.decode_image(img, channels=3)  # decode the image
+            print("Image decoded.")
+            img = tf.image.resize_with_pad(img, 224, 224)  # resize the image to match the input shape of the model
+            print("Image resized with padding.")
+            img = np.array(img) / 255.0  # normalize the pixel values to be between 0 and 1
+            print("Image pixel values normalized.")
 
+            # load the model and get the prediction
+            print("Loading model...")
+            model = tf.keras.models.load_model('model_one/model.h5', custom_objects={'KerasLayer': hub.KerasLayer}, compile=False)
+            model.build((None, 224, 224, 3))
+            print("Model loaded.")
+            prediction = model.predict(np.array([img]))
+            print("Prediction :", prediction)
+            prediction_class = np.argmax(prediction)
+            print("prediction_classsssssss:", prediction_class)
 
-# from django.shortcuts import get_object_or_404
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework.views import APIView
+            predicted_class_index = np.argmax(prediction)
+            #####  WWWWHHHHHHATTT TTTHHHEEEEE ***** (:---:)
+            # data_dir = pathlib.Path('/content/drive/MyDrive/New folder/train')
+            # class_names = np.array(sorted([item.name for item in data_dir.glob('*')]))
+            class_names = ['Burger', 'Dairy product', 'Donut', 'Egg', 'Meat', 'Noodles-Pasta', 'Pizza',
+            'Sandwich', 'Seafood', 'cake', 'hotDog','sushi']   
 
+            predicted_class_name = class_names[predicted_class_index]
+            print("Prediction class:", prediction_class)
+            print("Prediction NAAAAMAMMMMMMMEEEEEEEEEEE:", predicted_class_name)
 
-# class PredictView(APIView):
-#     # permission_classes = [IsAuthenticated]
+            # look up the category in the database and serialize the response
+            print("Looking up category in database...")
+            category = Category.objects.get(pk=prediction_class)
+            print("Category found:", category)
+            serializer = CategorySerializer(category)
 
-#     def get_queryset(self):
-#         queryset = Category.objects.all()
-#         return queryset
+            # get the food and allergy for the category
+            print("Getting food and allergy for the category...")
+            food = category.food_set.first()
+            allergies = food.allergy_set.all()
+            allergy_names = [allergy.englishName for allergy in allergies]
+            # add food name to the response
+            food_name = food.englishName
 
-#     def post(self, request):
-#         model = load_model('model_ai/model.h5')
-#         img_path = request.FILES['image']
-#         img = image.load_img(img_path, target_size=(224, 224))
-#         x = image.img_to_array(img)
-#         c = np.expand_dims(x, axis=0)
-#         x = preprocess_input(x)
-#         prediction = model.predict(x)
-#         food = Food.objects.filter(englishName=prediction)[0]
-#         category = get_object_or_404(self.get_queryset(), food=food)
-#         serializer = CategorySerializer(category)
-#         return Response(serializer.data)
+            # return the response
+            print("Returning the response...")
+            data = serializer.data
+            data['allergies'] = allergy_names
+            data['food_name'] = food_name
+            return Response(data, status=status.HTTP_200_OK)
+        
+        print("Invalid input data.")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
- 
-
-
-
-
-
-
-
-
-
-# from django.http import JsonResponse
-# from django.shortcuts import get_object_or_404
-# from django.views.decorators.csrf import csrf_exempt
-# from keras.applications.imagenet_utils import preprocess_input
-# from keras.preprocessing import image
-# from rest_framework.decorators import api_view
-# from database.models import Category, Food, Allergy
-# import numpy as np
-# import os
-# from keras.models import load_model
-
-# # Load the Keras model
-# model = load_model('model_ai/model.h5')
-
-# @csrf_exempt
-# @api_view(['POST'])
-# def predict_food(request):
-# # Load the image
-#     img_file = request.FILES.get('image', None)
-#     if img_file is None:
-#         return JsonResponse({'error': 'Image file is missing.'}, status=400)
-#     img = image.load_img(img_file, target_size=(224, 224))
-#     x = image.img_to_array(img)
-#     x = preprocess_input(x)
-#     x = np.expand_dims(x, axis=0)
-
-# # Make the prediction
-#     preds = model.predict(x)
-#     food_type = np.argmax(preds)
-
-# # Get the food name and associated allergies
-#     food_name = Food.objects.get(id=food_type)
-#     category = get_object_or_404(Category, food=food_name)
-#     allergies = category.allergy.all()
-
-# # Return the list of allergies
-#     allergy_list = [{'arabicName': allergy.arabicName, 'englishName': allergy.englishName} for allergy in allergies]
-#     return JsonResponse({'food_type': food_name.englishName, 'allergies': allergy_list})
