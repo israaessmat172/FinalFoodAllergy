@@ -101,12 +101,12 @@ WSGI_APPLICATION = "food_allergy.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2-binary',
-        'NAME': 'FoodAllergiesDB',
-        'USER': 'israaessmat',
-        'PASSWORD': 'israa',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'myproject',
+        'USER': 'myprojectuser',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '',
     }
 }
 

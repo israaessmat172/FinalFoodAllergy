@@ -17,6 +17,8 @@ urlpatterns = [
     path('api/auth/', include('dj_rest_auth.urls')),
     path('api/auth/password/reset/confirm/<slug:uidb64>/<slug:token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('api/auth/password/reset/', PasswordResetView.as_view(), name='password_reset'),
+    path('rest-auth/facebook/', FacebookLogin.as_view(), name='fb_login'),
+    path('rest-auth/twitter/', TwitterLogin.as_view(), name='twitter_login'),
 ]
 
 
