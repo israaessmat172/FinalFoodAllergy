@@ -53,7 +53,7 @@ class Doctor(models.Model):
 
     def __str__(self):
         return self.doctor.username
-    
+
 @receiver(post_save, sender=Doctor)
 def update_doctor_status(sender, instance, **kwargs):
     if instance.license_pic:

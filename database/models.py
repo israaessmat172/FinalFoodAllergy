@@ -17,7 +17,7 @@ class Allergy(models.Model):
     def __str__(self):
         return f"{self.arabicName} - {self.englishName}"
     
-    
+   
 
 class Category(models.Model):
     arabicName = models.CharField(max_length=500, verbose_name=_("Arabic name"))
