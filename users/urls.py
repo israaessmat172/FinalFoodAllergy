@@ -11,12 +11,11 @@ from dj_rest_auth.views import (
     PasswordResetConfirmView,
     PasswordResetView,
 )
-
 urlpatterns = [
     # other URL patterns here...
     path('api/auth/', include('dj_rest_auth.urls')),
     path('api/auth/password/reset/confirm/<slug:uidb64>/<slug:token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('api/auth/passwordd/reset/', PasswordResetView.as_view(), name='password_reset'),
+    path('api/auth/password/reset/', PasswordResetView.as_view(), name='password_reset'),
     path('api/auth/facebook/', FacebookLogin.as_view(), name='fb_login'),
     path('api/auth/twitter/', TwitterLogin.as_view(), name='twitter_login'),
 ]
