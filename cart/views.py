@@ -6,7 +6,6 @@ from .models import Product, Rating, Cart, CartItem, Order, OrderItem
 from .serializers import ProductSerializer, CartSerializers, CartItemSerializer, OrderSerializers
 from django_filters.rest_framework import DjangoFilterBackend
 import random
-from django.core.mail import EmailMessage
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -24,6 +23,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         rating = request.data.get('rating')
 
         Rating.objects.update_or_create(user=user, product=product, defaults={'rating': rating})
+
         product.refresh_from_db()
         serializer = self.get_serializer(product)
         return Response(serializer.data)
@@ -33,10 +33,6 @@ class ProductViewSet(viewsets.ModelViewSet):
         random_product_id_list = random.sample(list(pro),min(len(pro),6))
         query_set = Product.objects.filter(id__in=random_product_id_list)
         serializer = self.serializer_class(query_set, many=True)
-        email = EmailMessage(
-            subject="test", body="test from israa", to=['om23440@gmail.com']
-        )
-        email.send()
         return Response(serializer.data)
 
 class CartViewSet(viewsets.ModelViewSet):
