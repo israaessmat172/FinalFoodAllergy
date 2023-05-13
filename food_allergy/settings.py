@@ -198,19 +198,10 @@ REST_AUTH = {
 
 }
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = "stmp.gmail.com"
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS=True
-# EMAIL_USE_SSL=False
-# EMAIL_HOST_USER="israaessmat172@gmail.com"
-# EMAIL_HOST_PASSWORD="knfixvynwjowiagk"
-# USE_I18N = True
-# USE_L10N = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'israaessmat172@gmail.com'
-EMAIL_HOST_PASSWORD = 'knfixvynwjowiagk'
+EMAIL_HOST_PASSWORD = 'knfixvynwjowiagka'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
