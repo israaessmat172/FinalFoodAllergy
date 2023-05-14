@@ -108,3 +108,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username','email', 'profile_pic', 'phone')
+
+class LicenseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Doctor
+        fields = ('license_pic',)

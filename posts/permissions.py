@@ -24,9 +24,14 @@ class IsDoctorOrReadOnly(permissions.BasePermission):
         except Doctor.DoesNotExist:
             return False
 
-class IsOwnerOrReadOnly(permissions.BasePermission):
+class IsOwnerOrStaffOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission to only allow owners of an object or staff users to edit it.
+    """
     def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return obj.owner == request.user
+        # Write permissions are only allowed to the owner of the post or staff users
+        return obj.owner == request.user or request.user.is_staff

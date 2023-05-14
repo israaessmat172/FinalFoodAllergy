@@ -5,14 +5,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsDoctor, IsOwnerOrReadOnly
+from .permissions import IsDoctor, IsOwnerOrStaffOrReadOnly
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     filter_backends = [SearchFilter]
     search_fields = ['allergy__arabicName', 'allergy__englishName']
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated, IsOwnerOrStaffOrReadOnly]
 
     @action(detail=True, methods=['POST'])
     def like(self, request, pk=None, *args, **kwargs):
@@ -27,6 +27,11 @@ class PostViewSet(viewsets.ModelViewSet):
             liked = True
 
         return Response({'liked': liked})
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
     
     

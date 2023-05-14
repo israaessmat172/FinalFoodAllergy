@@ -12,7 +12,10 @@ from .serializers import (
     DetailedTokenSerializer,
     UserProfileSerializer,
 )
-from .models import User
+from .models import User, Doctor
+from .serializers import LicenseSerializer
+from rest_framework.generics import UpdateAPIView
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 
     # Create your views here.
@@ -60,3 +63,13 @@ class GitHubLogin(SocialLoginView):
     adapter_class = GitHubOAuth2Adapter
     callback_url = "CALLBACK_URL_YOU_SET_ON_GITHUB"
     client_class = OAuth2Client
+
+class LicenseView(UpdateAPIView):
+    serializer_class = LicenseSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return Doctor.objects.get(doctor=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save()

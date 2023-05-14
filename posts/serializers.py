@@ -28,3 +28,9 @@ class PostSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = { 'likes':{'read_only':True}}
 
+
+    def get_is_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.likes.filter(pk=request.user.pk).exists()
+        return False

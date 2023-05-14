@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .views import (DoctorRegistrationView,
-                    FacebookLogin,GitHubLogin, PatientRegistrationView, TwitterLogin, CustomLoginView,UserProfileViewSet)
+                    FacebookLogin,GitHubLogin, PatientRegistrationView, TwitterLogin, CustomLoginView,UserProfileViewSet, LicenseView)
 
 
 from dj_rest_auth.views import (
@@ -18,6 +18,7 @@ urlpatterns = [
     path('api/auth/password/reset/', PasswordResetView.as_view(), name='password_reset'),
     path('api/auth/facebook/', FacebookLogin.as_view(), name='fb_login'),
     path('api/auth/twitter/', TwitterLogin.as_view(), name='twitter_login'),
+    path('license/', LicenseView.as_view(), name='license'),
 ]
 
 
