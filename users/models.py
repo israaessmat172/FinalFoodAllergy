@@ -50,7 +50,11 @@ class Doctor(models.Model):
         null=True,
         upload_to="license_pic",
     )
-
+    face_pic = models.ImageField(
+        blank=True,
+        null=True,
+        upload_to="face_pic",
+    )
     def __str__(self):
         return self.doctor.username
 

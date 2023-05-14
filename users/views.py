@@ -64,12 +64,15 @@ class GitHubLogin(SocialLoginView):
     callback_url = "CALLBACK_URL_YOU_SET_ON_GITHUB"
     client_class = OAuth2Client
 
-class LicenseView(UpdateAPIView):
+class LicenseView(viewsets.ModelViewSet):
     serializer_class = LicenseSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_object(self):
-        return Doctor.objects.get(doctor=self.request.user)
-
-    def perform_update(self, serializer):
-        serializer.save()
+    def create(self, request):
+        user=request.user
+        data=request.data
+        ser= self.serializer_class(**data)
+        if ser.is_valid():
+            user.is_doctor=True
+            user.save()
+            doctor=Doctor

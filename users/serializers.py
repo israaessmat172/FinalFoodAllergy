@@ -112,4 +112,4 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class LicenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
-        fields = ('license_pic',)
+        fields = ('license_pic','face_pic')
