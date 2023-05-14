@@ -12,6 +12,7 @@ from .serializers import (
     DetailedTokenSerializer,
     UserProfileSerializer,
 )
+from rest_framework import generics
 from .models import User, Doctor
 from .serializers import LicenseSerializer
 from rest_framework.generics import UpdateAPIView
@@ -34,12 +35,14 @@ class DoctorRegistrationView(RegisterView, viewsets.GenericViewSet):
 class PatientRegistrationView(RegisterView, viewsets.GenericViewSet):
     serializer_class = CustomPatientRegistrationSerializer
 
-class UserProfileViewSet(viewsets.ViewSet):
+class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
-
+    http_method_names= ['get']
+    
     def retrieve(self, request, pk=None):
-        serializer = self.serializer_class(request.user)
+        user = User.objects.get(id=pk)
+        serializer = self.serializer_class(user)
         return Response(serializer.data)
 
     def update(self, request, pk=None):
@@ -50,6 +53,7 @@ class UserProfileViewSet(viewsets.ViewSet):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=400)
+
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
@@ -64,15 +68,22 @@ class GitHubLogin(SocialLoginView):
     callback_url = "CALLBACK_URL_YOU_SET_ON_GITHUB"
     client_class = OAuth2Client
 
-class LicenseView(viewsets.ModelViewSet):
+class LicenseView(generics.GenericAPIView):
     serializer_class = LicenseSerializer
     permission_classes = [IsAuthenticated]
 
-    def create(self, request):
+    def post(self, request):
         user=request.user
         data=request.data
-        ser= self.serializer_class(**data)
+        ser = LicenseSerializer(data=data)
         if ser.is_valid():
             user.is_doctor=True
-            user.save()
-            doctor=Doctor
+            user.save()            
+            doctor,_=Doctor.objects.get_or_create(doctor=user)
+            doctor.license_pic = request.data['license_pic']
+            doctor.face_pic = request.data['face_pic']
+            doctor.save()
+            ser_ = LicenseSerializer(doctor)
+            return Response(ser_.data)
+        else:
+            return Response(ser.errors)

@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .views import (DoctorRegistrationView,
-                    FacebookLogin,GitHubLogin, PatientRegistrationView, TwitterLogin, CustomLoginView,UserProfileViewSet)
+                    FacebookLogin,GitHubLogin, PatientRegistrationView, TwitterLogin, CustomLoginView,UserProfileViewSet,LicenseView)
 
 
 from dj_rest_auth.views import (
@@ -40,4 +40,6 @@ router.register('user-profile', UserProfileViewSet, basename='user-profile')
 urlpatterns = [
     path("", include(router.urls)),
     path("loggin/", CustomLoginView.as_view(), name="login"),
+    path('lic/', LicenseView.as_view())
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

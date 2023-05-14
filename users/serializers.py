@@ -103,13 +103,19 @@ class CustomPatientRegistrationSerializer(RegisterSerializer):
         patient.save()
         return user
 
-class UserProfileSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ('id', 'username','email', 'profile_pic', 'phone')
-
 class LicenseSerializer(serializers.ModelSerializer):
+    license_pic = serializers.ImageField(write_only=True)
+    face_pic = serializers.ImageField(write_only=True)
     class Meta:
         model = Doctor
         fields = ('license_pic','face_pic')
+
+class LicenseSerializer_(serializers.ModelSerializer):
+    class Meta:
+        model = Doctor
+        fields = ['license_pic']
+class UserProfileSerializer(serializers.ModelSerializer):
+    licen = LicenseSerializer_(read_only=True)
+    class Meta:
+        model = User
+        fields = ('id', 'username','email', 'profile_pic', 'phone','licen')
