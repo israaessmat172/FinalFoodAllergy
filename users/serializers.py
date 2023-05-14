@@ -2,6 +2,7 @@ from dj_rest_auth.registration.serializers import RegisterSerializer
 from dj_rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 from .models import  Doctor, Patient
 
@@ -32,7 +33,8 @@ class DetailedTokenSerializer(TokenSerializer):
         return True if obj else False
 
     def get_message(self, obj):
-        return "تم تسجيل الدخول بنجاح" if obj else "خطأ في البريد الالكتروني او كلمة المرور"
+        # return "تم تسجيل الدخول بنجاح" if obj else "خطأ في البريد الالكتروني او كلمة المرور"
+        return settings.LOGIN_SUCCESS_MESSAGE
     
     def get_image(self, obj):
         if obj.user.profile_pic:

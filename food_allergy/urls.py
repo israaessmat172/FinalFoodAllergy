@@ -23,6 +23,7 @@ from drf_spectacular.views import (
 from django.conf import settings
 
 from django.views.static import serve
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -38,6 +39,7 @@ urlpatterns = [
 ]
 
 urlpatterns += [
+    path("rest-api/", include("rest_framework.urls")),
     # YOUR PATTERNS
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     # Optional UI:
@@ -51,6 +53,6 @@ urlpatterns += [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
-    re_path(r'^media/(?P<path>.*)$',serve,{'document_root':settings.MEDIA_ROOT}),
-    re_path(r'^static/(?P<path>.*)$',serve,{'document_root':settings.STATIC_ROOT}),
-]
+    # re_path(r'^media/(?P<path>.*)$',serve,{'document_root':settings.MEDIA_ROOT}),
+    # re_path(r'^static/(?P<path>.*)$',serve,{'document_root':settings.STATIC_ROOT}),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

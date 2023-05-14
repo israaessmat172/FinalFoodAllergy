@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+EMAIL_HOST_USER = os.environ.get('email')
+EMAIL_HOST_PASSWORD = os.environ.get('password')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -188,20 +194,25 @@ AUTH_USER_MODEL = "users.User"
 
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True   
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 
 REST_AUTH = {
     'LOGIN_SERIALIZER': 'users.serializers.LoginSerializer',
     'TOKEN_SERIALIZER': 'users.serializers.DetailedTokenSerializer',
     'REGISTER_SERIALIZER': 'users.serializers.RegisterSerializer',
+    "LOGIN_SERIALIZER": "users.serializers.LoginSerializer",
+    "TOKEN_SERIALIZER": "users.serializers.DetailedTokenSerializer",
+    "REGISTER_SERIALIZER": "users.serializers.RegisterSerializer",
 
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'israaessmat172@gmail.com'
-EMAIL_HOST_PASSWORD = 'knfixvynwjowiagka'
+# EMAIL_HOST_USER = 'israaessmat172@gmail.com'
+# EMAIL_HOST_PASSWORD = 'knfixvynwjowiagk'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
