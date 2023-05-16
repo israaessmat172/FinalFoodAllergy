@@ -166,7 +166,7 @@ import json
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from uuid import getnode as get_mac
 import uuid
-from django.contrib.admin.decorators import action
+from rest_framework.decorators import action
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
