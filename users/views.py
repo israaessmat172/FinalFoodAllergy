@@ -166,6 +166,7 @@ import json
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from uuid import getnode as get_mac
 import uuid
+from django.contrib.admin.decorators import action
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
@@ -184,6 +185,15 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=400)
+        
+    @action(
+        detail=False, methods=['GET'],
+        serializer_class=statusSerializers,
+        permission_classes=[IsAuthenticated],)
+    def status(self,request):
+        user = request.user
+        serializers = statusSerializers(user)
+        return Response(serializers.data)
 
 # Create your views here.
 class RegisterView(generics.GenericAPIView):

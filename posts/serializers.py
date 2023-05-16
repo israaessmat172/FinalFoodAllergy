@@ -28,7 +28,10 @@ class PostSerializer(serializers.ModelSerializer):
     is_liked = serializers.BooleanField(read_only=True)
     class Meta:
         model = Post
-        fields = ['id','owner','comments','is_liked','title','image','created_at','updated_at']
+        # fields = ['id','owner','comments','is_liked','title','image','created_at','updated_at']
+        fields = ['id','owner','comments','is_liked','title','image','created_at','updated_at','owner_profile_pic',
+                  "allergy_arabic_name","allergy_english_name"]
+
         extra_kwargs = { 'likes':{'read_only':True}}
 
 
