@@ -4,7 +4,7 @@ from .serializers import PostSerializer, CommentSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated , IsAuthenticatedOrReadOnly
 from .permissions import IsDoctor, IsOwnerOrStaffOrReadOnly
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -14,19 +14,7 @@ class PostViewSet(viewsets.ModelViewSet):
     search_fields = ['allergy__arabicName', 'allergy__englishName']
     permission_classes = [IsAuthenticated, IsOwnerOrStaffOrReadOnly]
 
-    @action(detail=True, methods=['POST'])
-    def like(self, request, pk=None, *args, **kwargs):
-        post = self.get_object()
-        user = request.user
 
-        if user in post.likes.all():
-            post.likes.remove(user)
-            liked = False
-        else:
-            post.likes.add(user)
-            liked = True
-
-        return Response({'liked': liked})
     
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -40,9 +28,12 @@ class PublicPostViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PostSerializer
     filter_backends = [SearchFilter]
     search_fields = ['allergy__arabicName', 'allergy__englishName']
-    
-    @action(detail=True, methods=['POST'])
-    def like(self, request, pk=None, *args, **kwargs):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    @action(
+        detail=True, methods=['POST'],
+        serializer_class=None,
+        permission_classes=[IsAuthenticated],)
+    def like(self, request,pk=None):
         post = self.get_object()
         user = request.user
 
@@ -52,7 +43,7 @@ class PublicPostViewSet(viewsets.ReadOnlyModelViewSet):
         else:
             post.likes.add(user)
             liked = True
-
+        post.save()
         return Response({'liked': liked})
 
 class UserPostsViewSet(viewsets.ReadOnlyModelViewSet):

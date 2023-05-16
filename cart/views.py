@@ -67,7 +67,7 @@ class CartViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['POST'], serializer_class= OrderSerializers)
     def complete(self,request):
         user=request.user
-        data = request.POST
+        data = request.data
         serializers = OrderSerializers(data=data)
         if not serializers.is_valid():
             return Response(serializers.errors)
