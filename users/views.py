@@ -196,6 +196,46 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         return Response(serializers.data)
 
 # Create your views here.
+
+class RegisterView_as_doctor(generics.GenericAPIView):
+    serializer_class = RegisterSerializer
+    def post(self, request):
+
+        user = request.data
+        serializer = self.serializer_class(data=user)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+        else :
+            return Response(
+                {
+                    "status": False,
+                    "message": "هذا الايميل موجود من قبل ",
+                },
+                status=status.HTTP_200_OK,
+            )
+        user_data = serializer.data
+        user = User.objects.get(email=user_data["email"])
+        token = RefreshToken.for_user(user)
+        current_site = get_current_site(request).domain
+        relativeLink = reverse('auth:verify')
+        absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
+        context = {"name": user.username, "url":str(absurl)}
+        rendered = render_to_string("verify.html", context)            
+        data = {
+            "body": rendered,
+            "to": [user.email],
+            "subject": "Code for verify",
+        }
+        create,_ = Doctor.objects.get_or_create(doctor=user)
+        Util.send_email_without_file(**data, html=True)
+        return Response(
+                {
+                    "status": True,
+                    "message": "لقد تم انشاء ايميل وارسلنا رسالة تفعيل للايميل الخاص بك",
+                },
+                status=status.HTTP_200_OK,
+            )
+
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
     def post(self, request):
@@ -225,6 +265,7 @@ class RegisterView(generics.GenericAPIView):
             "to": [user.email],
             "subject": "Code for verify",
         }
+        create,_ = Patient.objects.get_or_create(patient=user)
         Util.send_email_without_file(**data, html=True)
         return Response(
                 {

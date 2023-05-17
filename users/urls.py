@@ -102,7 +102,7 @@ app_name = "auth"
 router.register('user-profile', UserProfileViewSet, basename='user-profile')
 urlpatterns= [
     path("", include(router.urls)),
-    path('registerDoctor/', RegisterView.as_view(), name ="registerDoctor"),
+    path('registerDoctor/', RegisterView_as_doctor.as_view(), name ="registerDoctor"),
     path('registerPatient/', RegisterView.as_view(), name ="registerPatient"),
     path('login/', LoginAPIView.as_view(), name="login"),
     path('logout/', LogoutAPIView.as_view(), name="logout"),
