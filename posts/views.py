@@ -14,8 +14,6 @@ class PostViewSet(viewsets.ModelViewSet):
     search_fields = ['allergy__arabicName', 'allergy__englishName']
     permission_classes = [IsAuthenticated, IsOwnerOrStaffOrReadOnly]
 
-
-    
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['request'] = self.request

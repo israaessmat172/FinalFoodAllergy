@@ -189,6 +189,9 @@ class LoginSerializer(serializers.ModelSerializer):
     Token = serializers.CharField(
         max_length=200000, min_length=6, read_only=True
     )
+    phone =serializers.CharField(read_only=True)
+    profile_pic = serializers.ImageField(read_only=True)
+
     class Meta:
         model = User
         fields = [
@@ -198,6 +201,9 @@ class LoginSerializer(serializers.ModelSerializer):
             "id",
             "Token",
             "is_doctor",
+            "profile_pic",
+            "phone",
+            
         ]
         extra_kwargs = {"is_doctor":{"read_only":True}}
 
@@ -242,18 +248,17 @@ class LoginSerializer(serializers.ModelSerializer):
             "email": user.email,
             "username": user.username,
             "Token": tt.key,
-            "is_doctor":user.is_doctor
+            "is_doctor":user.is_doctor,
+            "id":user.id,
+            "profile_pic":user.profile_pic,
+            "phone":user.phone
+
         }
-
-
-
 
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):
     email = serializers.EmailField(min_length=2)
     class Meta:
         fields = ["email"]
-
-
 
 
 class LogoutSerializer(serializers.Serializer):

@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 
 class CommentSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    owner_profile_pic = serializers.ImageField(source='owner.profile_pic', read_only=True)
 
     def create(self, validated_data):
         # Check if the user is a doctor
@@ -30,7 +31,7 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         # fields = ['id','owner','comments','is_liked','title','image','created_at','updated_at']
         fields = ['id','owner','comments','is_liked','title','image','created_at','updated_at','owner_profile_pic',
-                  "allergy_arabic_name","allergy_english_name"]
+                  "allergy_arabic_name","allergy_english_name", "likes"]
 
         extra_kwargs = { 'likes':{'read_only':True}}
 

@@ -170,7 +170,7 @@ from rest_framework.decorators import action
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
-    http_method_names= ['get']
+    http_method_names= ['get', 'put']
     
     def retrieve(self, request, pk=None):
         user = User.objects.get(id=pk)
