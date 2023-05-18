@@ -44,7 +44,7 @@ class CommentSerializer(serializers.ModelSerializer):
 #         return False
 
 class PostSerializer(serializers.ModelSerializer):
-    owner = serializers.SlugRelatedField(slug_field='username',read_only=True)
+    owner_name = serializers.CharField(source='owner.username', read_only=True)
     comments = CommentSerializer(many=True, read_only=True, source='comment_set')
     owner_profile_pic = serializers.ImageField(source='owner.profile_pic', read_only=True)
     allergy_arabic_name = serializers.CharField(source='allergy.arabicName', read_only=True)
@@ -53,7 +53,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         # fields = ['id','owner','comments','is_liked','title','image','created_at','updated_at']
-        fields = ['id','owner','comments','is_liked','title','image','created_at','updated_at','owner_profile_pic',
+        fields = ['id','owner_name','owner','comments','is_liked','title','image','created_at','updated_at','owner_profile_pic',
                   "allergy_arabic_name","allergy_english_name", "likes"]
 
         extra_kwargs = { 'likes':{'read_only':True}}

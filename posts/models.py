@@ -7,9 +7,9 @@ from django.urls import reverse
 class Post(models.Model):
     title = models.CharField(max_length=500)
     image = models.ImageField( null=True, blank=True)
-    allergy = models.ForeignKey(Allergy, related_name='posts', on_delete=models.PROTECT)
+    allergy = models.ForeignKey(Allergy, related_name='posts', on_delete=models.PROTECT, null=True)
     owner = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User,related_name='likes',blank=True)
     def __str__(self):
