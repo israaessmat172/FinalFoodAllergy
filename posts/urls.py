@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import PublicPostViewSet, CommentViewSet, PostViewSet, UserPostsViewSet, PostCommentsViewSet
+from .views import PublicPostViewSet, CommentViewSet, PostViewSet, UserPostsViewSet, PostCommentsViewSet, ContactMessageView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -13,4 +13,5 @@ router.register('posts/(?P<post_id>\d+)/comments', PostCommentsViewSet, basename
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('contact/', ContactMessageView.as_view(), name='contact'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

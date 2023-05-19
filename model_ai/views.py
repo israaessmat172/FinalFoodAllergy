@@ -15,6 +15,7 @@ from rest_framework import status
 from tensorflow.keras.preprocessing import image
 from rest_framework.permissions import IsAuthenticated
 import io
+from django.shortcuts import get_object_or_404
 # from rest_framework import permissions
 
 class PredictAPIView(APIView):
@@ -59,10 +60,16 @@ class PredictAPIView(APIView):
             print("Prediction NAAAAMAMMMMMMMEEEEEEEEEEE:", predicted_class_name)
 
             # look up the category in the database and serialize the response
+            # try:
+            #     category = Category.objects.get(pk=prediction_class)
+            #     print("Category found:", category)
+            #     serializer = CategorySerializer(category)
+
             try:
-                category = Category.objects.get(pk=prediction_class)
+                category = get_object_or_404(Category, pk=prediction_class)
                 print("Category found:", category)
                 serializer = CategorySerializer(category)
+
 
                 # get the food and allergy for the category
                 food = category.food_set.first()

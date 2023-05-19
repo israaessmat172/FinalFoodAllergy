@@ -1,11 +1,12 @@
 from rest_framework import viewsets, permissions
 from .models import Post, Comment
-from .serializers import PostSerializer, CommentSerializer
+from .serializers import PostSerializer, CommentSerializer, ContactMessageSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated , IsAuthenticatedOrReadOnly
 from .permissions import IsDoctor, IsOwnerOrStaffOrReadOnly
+from rest_framework.views import APIView
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -67,3 +68,11 @@ class PostCommentsViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         post_id = self.kwargs['post_id']
         return Comment.objects.filter(post__id=post_id)
+
+class ContactMessageView(APIView):
+    def post(self, request):
+        serializer = ContactMessageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Thank you for your message! We will get back to you soon.'}, status=201)
+        return Response(serializer.errors, status=400)

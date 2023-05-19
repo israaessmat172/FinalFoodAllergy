@@ -31,9 +31,13 @@ class Comment(models.Model):
     def get_absolute_url(self):
         return reverse('post_detail', args=[str(self.post.id)])
     
-    # def clean(self):
-    #     if not self.owner.doctor:
-    #         raise ValidationError("Only doctors can make comments.")
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100)
+    phone = models.CharField(max_length=20)
+    message = models.TextField(max_length=300)
+
+    def __str__(self):
+        return self.name
     
-    # class Meta:
-    #     ordering = ['created']
