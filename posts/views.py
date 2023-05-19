@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions
-from .models import Post, Comment
+from .models import Post, Comment, ContactMessage
 from .serializers import PostSerializer, CommentSerializer, ContactMessageSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -47,7 +47,7 @@ class PublicPostViewSet(viewsets.ReadOnlyModelViewSet):
 
 class UserPostsViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PostSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated)
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
@@ -70,6 +70,9 @@ class PostCommentsViewSet(viewsets.ReadOnlyModelViewSet):
         return Comment.objects.filter(post__id=post_id)
 
 class ContactMessageView(APIView):
+    queryset = ContactMessage.objects.all()
+    serializer_class =ContactMessageSerializer
+    permission_classes = (IsAuthenticated)
     def post(self, request):
         serializer = ContactMessageSerializer(data=request.data)
         if serializer.is_valid():
