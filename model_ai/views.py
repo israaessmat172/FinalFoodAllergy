@@ -59,29 +59,31 @@ class PredictAPIView(APIView):
             print("Prediction NAAAAMAMMMMMMMEEEEEEEEEEE:", predicted_class_name)
 
            
-            try:
-                category = get_object_or_404(Category, pk=prediction_class)
-                
-         
-                food = category.food_set.first()
-                allergies = food.allergy_set.all()
-                allergy_names = [allergy.englishName for allergy in allergies]
-                food_name = food.englishName
-
+        try:
+            c = Category.objects.first()
+            print(c.id)
+            category = get_object_or_404(Category, pk=5)
+            print(category)
+            food = category.food.first()
+            
+            allergies = category.allergy.all()
+            allergy_names = [allergy.englishName for allergy in allergies]
+            food_name = food.englishName
+            print("Food Found:", food)
                
-                data = {
-                    'category_name': category.name,
+            data = {
+                    'category_name': category.englishName,
                     'food_name': food_name,
                     'allergies': allergy_names,
                 }
                 
                
-                print("Returning the response...")
-                return Response(data, status=status.HTTP_200_OK)
+            print("Returning the response...")
+            return Response(data, status=status.HTTP_200_OK)
             
-            except Http404:
-                print("Category not found.")
-                return Response({'error': 'Category not found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Http404:
+            print("Category not found.")
+            return Response({'error': 'Category not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 
