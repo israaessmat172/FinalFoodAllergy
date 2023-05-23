@@ -27,6 +27,38 @@ class PredictAPIView(APIView):
       
     serializer_class = PredictSerializer
 
+    # def post(self, request):
+#         class_names = ['Burger', 'Dairy product', 'Donut', 'Egg', 'Meat', 'Noodles-Pasta', 'Pizza',
+#              'Sandwich', 'Seafood', 'cake', 'hotDog','sushi']   
+
+#         predicted_class_index = 1  # Replace with the actual predicted class index
+
+#         category_name = class_names[predicted_class_index]
+#         category = get_object_or_404(Category, food=category_name)
+#         print('-----------++++++++', category)
+#         serializer = CategorySerializer(category)
+
+#          # Retrieve the food and allergy information
+#         food = category.food.first()
+#         food_name = food.englishName
+#         print("Food found:", food)
+
+#         allergies = category.allergy.all()
+#         allergy_names = [allergy.englishName for allergy in allergies]
+#         print("Allergies found:", allergy_names)
+
+# # Create the response data
+#         data = serializer.data
+#         data['allergies'] = allergy_names
+#         data['food_name'] = food_name
+
+# # Return the response   
+#         print("Returning the response...")
+#         return Response(data, status=status.HTTP_200_OK)
+
+#         print("Category not found.")
+#         return Response({'error': 'Category not found.'}, status=status.HTTP_404_NOT_FOUND)
+
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -39,10 +71,10 @@ class PredictAPIView(APIView):
             print("Image resized with padding.")
             img = np.array(img) / 255.0  
             print("Image pixel values normalized.")
-
-       
             print("Loading model...")
-            model = tf.keras.models.load_model('model_ai/model.h5', custom_objects={'KerasLayer': hub.KerasLayer}, compile=False)
+            model_path = 'model_ai/model.h5'
+            model = tf.keras.models.load_model(model_path, custom_objects={'KerasLayer': hub.KerasLayer}, compile=False)
+            # model = tf.keras.models.load_model('model_ai/model.h5', custom_objects={'KerasLayer': hub.KerasLayer}, compile=False)
             model.build((None, 224, 224, 3))
             print("Model loaded.")
             prediction = model.predict(np.array([img]))

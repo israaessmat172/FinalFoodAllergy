@@ -47,7 +47,7 @@ class PublicPostViewSet(viewsets.ReadOnlyModelViewSet):
 
 class UserPostsViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PostSerializer
-    permission_classes = (IsAuthenticated)
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
@@ -72,7 +72,7 @@ class PostCommentsViewSet(viewsets.ReadOnlyModelViewSet):
 class ContactMessageView(APIView):
     queryset = ContactMessage.objects.all()
     serializer_class =ContactMessageSerializer
-    permission_classes = (IsAuthenticated)
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         serializer = ContactMessageSerializer(data=request.data)
         if serializer.is_valid():
