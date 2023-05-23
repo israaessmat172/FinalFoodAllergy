@@ -92,9 +92,10 @@ class PredictAPIView(APIView):
 
            
         try:
-            c = Category.objects.first()
-            print(c.id)
-            category = get_object_or_404(Category, pk=5)
+            f_id = Food.objects.get(englishName = predicted_class_name)
+            print(f_id)
+            print(predicted_class_name)
+            category = Category.objects.filter(Food, f_id.id)[0]
             print(category)
             food = category.food.first()
             
