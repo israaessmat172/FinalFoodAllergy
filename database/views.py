@@ -55,17 +55,16 @@ class CategoryViewSet(viewsets.ModelViewSet):
    
 
 class FoodAllegryViewSet(viewsets.ModelViewSet):
-    queryset = FoodAllergy.objects.all()
-    serializer_class = FoodAllergySerializer
-    permission_classes = [FoodAllergyPermission]
+    @action(detail=True, methods=['GET'])
+    def allergy(self, request, pk=None):
 
 
-    filter_backends = [
-        DjangoFilterBackend,
-        filters.SearchFilter,
-        filters.OrderingFilter,
-    ]
+        mini_food = MiniFoodAllergy.objects.get(id=pk)
+        allergy = FoodAllergy.objects.get(id=mini_food.foodallergy.id)
 
+
+        serializer = FoodAllergySerializer(allergy)
+        return Response(serializer.data)
 
 class MiniFoodAllegryViewSet(viewsets.ModelViewSet):
     queryset = MiniFoodAllergy.objects.all()

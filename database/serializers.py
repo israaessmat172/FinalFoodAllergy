@@ -4,20 +4,20 @@ from cart.serializers import ProductSerializer
 class FoodSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food
-        fields = "_all_"
+        fields = "__all__"
 
 
 class AllergySerializer(serializers.ModelSerializer):
     class Meta:
         model = Allergy
-        fields = "_all_"
+        fields = "__all__"
 
 
 class AllergySerializer_(serializers.ModelSerializer):
     products = ProductSerializer(many=True, read_only=True)
     class Meta:
         model = Allergy
-        fields = "_all_"
+        fields = "__all__"
         
 class CategorySerializer(serializers.ModelSerializer):
     food = serializers.SerializerMethodField()
@@ -25,7 +25,7 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
 
         model = Category
-        fields = "_all_"
+        fields = "__all__"
 
     def get_food(self, obj):
         food = obj.food
@@ -45,11 +45,11 @@ class CategorySerializer_(serializers.ModelSerializer):
     class Meta:
 
         model = Category
-        fields = "_all_"
+        fields = "__all__"
 class FoodAllergySerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodAllergy
-        fields = "_all_"
+        fields = "__all__"
 
     def get_foodallergy(self, obj):
         foodallegry = obj.foodallegry
@@ -69,7 +69,7 @@ class FoodAllergySerializer(serializers.ModelSerializer):
 class MiniFoodAllergySerializer(serializers.ModelSerializer):
     class Meta:
         model = MiniFoodAllergy
-        fields = "_all_"
+        fields = "__all__"
 
     def get_foodallergy(self, obj):
         minifoodallegry = obj.minifoodallegry

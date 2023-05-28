@@ -18,7 +18,7 @@ class Product(models.Model):
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     total_price = models.FloatField(default=0)
-    
+   
     def save(self,*args, **kwargs):
         try:
             self.get_price

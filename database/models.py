@@ -52,6 +52,7 @@ class MiniFoodAllergy(models.Model):
         null=True,
         upload_to="miniAllergy_pics",
     )
+    foodallergy = models.ForeignKey(FoodAllergy, on_delete=models.CASCADE, related_name='mini_food_allergies')
     arabicName = models.CharField(max_length=500, verbose_name=_("Arabic name"))
     englishName = models.CharField(max_length=500, verbose_name=_("English name"))
     

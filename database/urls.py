@@ -15,4 +15,5 @@ router.register("foodallegry", FoodAllegryViewSet, basename="FoodAllergy")
 router.register("minifoodallergy", MiniFoodAllegryViewSet, basename="MiniFoodAllergy")
 urlpatterns = [
     path("", include(router.urls)),
+    path('food-allergy/<int:pk>/allergy/', FoodAllegryViewSet.as_view({'get': 'allergy'}), name='food-allergy-allergy')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

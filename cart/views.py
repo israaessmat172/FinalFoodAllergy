@@ -3,12 +3,15 @@ from rest_framework import viewsets, status, filters, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Product, Rating, Cart, CartItem, Order, OrderItem
-from .serializers import ProductSerializer, CartSerializers, CartItemSerializer, OrderSerializers
+from .serializers import ProductSerializer, CartSerializers, CartItemSerializer, OrderSerializers, RatingSer
 from django_filters.rest_framework import DjangoFilterBackend
 import random
+from database.models import Allergy, MiniFoodAllergy
+from rest_framework.permissions import IsAuthenticated
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    
 
     filter_backends = [
         DjangoFilterBackend,
@@ -16,7 +19,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         filters.OrderingFilter,
     ]
 
-    @action(detail=True, methods=['POST'])
+    @action(detail=True, methods=['POST'], serializer_class=RatingSer, permission_classes = [IsAuthenticated])
     def rate(self, request, pk=None):
         user = request.user
         product = self.get_object()
@@ -25,7 +28,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         Rating.objects.update_or_create(user=user, product=product, defaults={'rating': rating})
 
         product.refresh_from_db()
-        serializer = self.get_serializer(product)
+        serializer = ProductSerializer(product)
         return Response(serializer.data)
     @action(detail=False,methods=['GET'])
     def recommended(self,*args,**kwargs):
@@ -35,6 +38,20 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer = self.serializer_class(query_set, many=True)
         return Response(serializer.data)
 
+class AllergyProductViewSet(viewsets.ModelViewSet):
+
+    @action(detail=True, methods=['GET'])
+    def allergy_products(self, request, pk=None):
+
+        mini_food=MiniFoodAllergy.objects.get(id=pk)
+
+        alg= Allergy.objects.get(id=mini_food.allergy.id)
+        # alg= mini_food.allergy.get()
+
+        products = alg.products.all()
+        serializer = ProductSerializer(products,many=True)
+        return Response(serializer.data)
+    
 class CartViewSet(viewsets.ModelViewSet):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer

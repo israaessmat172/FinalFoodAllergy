@@ -60,3 +60,6 @@ class OrderSerializers(serializers.ModelSerializer):
         model = Order
         fields = ['id','name','address','phone','item','total_price']
         extra_kwargs={"total_price":{"read_only":True}}
+
+class RatingSer(serializers.Serializer):
+    rating = serializers.IntegerField()
